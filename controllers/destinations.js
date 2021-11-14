@@ -4,7 +4,14 @@ import {Destination} from './../models/destination.js'
 function create(req, res){
     console.log(req.body)
     Destination.create(req.body)
-    .then(result => res.json(result))
+    .then(destination => 
+        Profile.findById(req.user.profile)
+        .then(userProfile => {
+            userProfile.destinations.push(destination)
+            userProfile.save()
+        })
+        .then(() => console.log(destination))
+        )
     .catch(err => console.log(err))
 }
 
